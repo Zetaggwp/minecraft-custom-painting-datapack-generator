@@ -1,5 +1,18 @@
 package zetaggwp.custompaintingdatapackgenerator;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Date;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author zetag
@@ -32,6 +45,7 @@ public class MainJFrame extends javax.swing.JFrame {
         lblWidth = new javax.swing.JLabel();
         lblFile = new javax.swing.JLabel();
         buttonSelectFile = new javax.swing.JButton();
+        buttonAdd = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -56,9 +70,21 @@ public class MainJFrame extends javax.swing.JFrame {
         lblWidth.setText("Width");
 
         lblFile.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblFile.setText("File Selected: ");
+        lblFile.setText("(No File Selected)");
 
         buttonSelectFile.setText("Select File");
+        buttonSelectFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSelectFileActionPerformed(evt);
+            }
+        });
+
+        buttonAdd.setText("Add To Datapack");
+        buttonAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonAddActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -81,14 +107,18 @@ public class MainJFrame extends javax.swing.JFrame {
                             .addComponent(spinnerHeight)
                             .addComponent(tfTitle)
                             .addComponent(spinnerWidth, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(buttonSelectFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblFile, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(buttonSelectFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(buttonAdd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblFile, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblAuthor)
                     .addComponent(tfAuthor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -106,13 +136,43 @@ public class MainJFrame extends javax.swing.JFrame {
                     .addComponent(spinnerWidth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(buttonSelectFile)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblFile)
+                .addGap(18, 18, 18)
+                .addComponent(buttonAdd)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void buttonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddActionPerformed
+        if (!tfAuthor.getText().isBlank() && chosenFile != null) {
+            File dirs = new File(String.format("datapack/data/%s/painting_variant",tfAuthor.getText()));
+            dirs.mkdirs();
+            File paintingJSON = new File(dirs, chosenFile.getName()+".json");
+            try {
+                paintingJSON.createNewFile();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, String.format("%s could not be created.\nPlease report the error at\nhttps://github.com/Zetaggwp/minecraft-custom-painting-datapack-generator\nusing the log file provided", chosenFile.getName()), "ERROR CREATING THE FILE", JOptionPane.ERROR_MESSAGE);
+                try {
+                    PrintWriter writer = new PrintWriter(new File(String.format("error_log_%s.log",LocalDate.now())));
+                    ex.printStackTrace(writer);
+                    writer.close();
+                } catch (FileNotFoundException ex1) {
+                    Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            }
+        }
+    }//GEN-LAST:event_buttonAddActionPerformed
+
+    private void buttonSelectFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectFileActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        int choice = chooser.showOpenDialog(null);
+        if (choice == JFileChooser.APPROVE_OPTION) {
+            chosenFile = chooser.getSelectedFile();
+        }
+    }//GEN-LAST:event_buttonSelectFileActionPerformed
 
     /**
      * @param args the command line arguments
@@ -150,6 +210,7 @@ public class MainJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonAdd;
     private javax.swing.JButton buttonSelectFile;
     private javax.swing.JLabel lblAuthor;
     private javax.swing.JLabel lblFile;
@@ -161,4 +222,5 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JTextField tfAuthor;
     private javax.swing.JTextField tfTitle;
     // End of variables declaration//GEN-END:variables
+    private File chosenFile;
 }

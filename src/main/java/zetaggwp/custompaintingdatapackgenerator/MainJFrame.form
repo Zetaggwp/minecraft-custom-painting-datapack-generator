@@ -23,7 +23,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="lblWidth" min="-2" max="-2" attributes="0"/>
@@ -45,16 +45,21 @@
                       </Group>
                   </Group>
                   <Component id="buttonSelectFile" alignment="0" max="32767" attributes="0"/>
-                  <Component id="lblFile" min="-2" pref="179" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
+          </Group>
+          <Component id="buttonAdd" alignment="1" max="32767" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="lblFile" min="-2" pref="179" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="lblAuthor" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="tfAuthor" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -76,8 +81,10 @@
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="buttonSelectFile" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="lblFile" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+              <Component id="buttonAdd" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -135,13 +142,24 @@
     <Component class="javax.swing.JLabel" name="lblFile">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="File Selected: "/>
+        <Property name="text" type="java.lang.String" value="(No File Selected)"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="buttonSelectFile">
       <Properties>
         <Property name="text" type="java.lang.String" value="Select File"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonSelectFileActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="buttonAdd">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Add To Datapack"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonAddActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
