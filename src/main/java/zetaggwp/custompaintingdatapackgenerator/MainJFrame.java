@@ -1,7 +1,9 @@
 package zetaggwp.custompaintingdatapackgenerator;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
@@ -148,17 +150,29 @@ public class MainJFrame extends javax.swing.JFrame {
 
     private void buttonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddActionPerformed
         if (!tfAuthor.getText().isBlank() && chosenFile != null) {
-            File dirs = new File(String.format("datapack/data/%s/painting_variant",tfAuthor.getText()));
+            File dirs = new File(String.format("datapack/data/%s/painting_variant",tfAuthor.getText().toLowerCase()));
             dirs.mkdirs();
-            File paintingJSON = new File(dirs, chosenFile.getName()+".json");
+            
+            String chosenFileName = chosenFile.getName();
+            
+            String[] splitChosenFileName = chosenFileName.split("\\.");
+            
+            StringBuilder chosenFileNameWithoutExtension = new StringBuilder();
+            for (int i = 0; i<splitChosenFileName.length-1; i++) {
+               chosenFileNameWithoutExtension.append(splitChosenFileName[i]);
+            }
+            
+            File paintingJSON = new File(dirs, chosenFileNameWithoutExtension.toString()+".json");
             try {
-                paintingJSON.createNewFile();
+                BufferedWriter writer = new BufferedWriter(new FileWriter(paintingJSON));
+                writer.write(String.format("{\"asset_id\": \"%s:%s\",\"author\": \"%s\",\"title\": \"%s\",\"height\": %d,\"width\": %d}", tfAuthor.getText().toLowerCase(),chosenFileNameWithoutExtension.toString(),tfAuthor.getText(),tfTitle.getText(),(Integer) spinnerHeight.getValue(),(Integer) spinnerWidth.getValue()));
+                writer.close();
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, String.format("%s could not be created.\nPlease report the error at\nhttps://github.com/Zetaggwp/minecraft-custom-painting-datapack-generator\nusing the log file provided", chosenFile.getName()), "ERROR CREATING THE FILE", JOptionPane.ERROR_MESSAGE);
                 try {
-                    PrintWriter writer = new PrintWriter(new File(String.format("error_log_%s.log",LocalDate.now())));
-                    ex.printStackTrace(writer);
-                    writer.close();
+                    PrintWriter logWriter = new PrintWriter(new File(String.format("error_log_%s.log",LocalDate.now())));
+                    ex.printStackTrace(logWriter);
+                    logWriter.close();
                 } catch (FileNotFoundException ex1) {
                     Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex1);
                 }
